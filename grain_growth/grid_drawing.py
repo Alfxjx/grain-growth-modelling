@@ -22,7 +22,7 @@ class GridClass:
         self.GROWTH_SPEED = 60
 
         # This sets the margin between each cell
-        self.MARGIN = 1
+        self.MARGIN = 0
 
     def init_grid(self, x, y):
         # Define grid sizes
@@ -37,6 +37,7 @@ class GridClass:
             # in this row
             self.grid.append([])
             for column in range(self.GRID_SIZE_Y):
+                # {'n': 0, 'color': 0}
                 self.grid[row].append(0)  # Append a cell
 
         # Set row 1, cell 5 to one. (Remember rows and
@@ -72,7 +73,7 @@ class GridClass:
 
         color_dict = RandomColorDictionary()
         already_placed_circles = []
-        radius_squared = radius**2
+        radius_squared = radius ** 2
 
         random_row = random.randint(0, self.GRID_SIZE_X - 1)
         random_column = random.randint(0, self.GRID_SIZE_Y - 1)
@@ -89,7 +90,7 @@ class GridClass:
             for cell in already_placed_circles:
                 circle_row = cell[0]
                 circle_column = cell[1]
-                distance_squared = (random_row - circle_row)**2 + (random_column - circle_column)**2
+                distance_squared = (random_row - circle_row) ** 2 + (random_column - circle_column) ** 2
                 if distance_squared <= radius_squared:
                     inside_circle = True
                     break
@@ -133,9 +134,6 @@ class GridClass:
                 column = j
                 color = random.choice(list(color_dict.colors.keys()))
                 self.grid[row][column] = color
-
-
-
 
 
 class PyGameWindow:

@@ -31,12 +31,12 @@ class Frame(wx.Frame):
         self.Centre(wx.BOTH)
         # and a status bar
         self.statusBar = self.CreateStatusBar()
-        self.statusBar.SetStatusText("Welcome to student project of grain growth!")
+        self.statusBar.SetStatusText("CA 元胞自动机模拟晶粒生长")
 
     def init_radius_random_input(self):
         sizer_hor_radius_grains = wx.BoxSizer(wx.HORIZONTAL)
         # --- Label radius grain ---
-        self.label_radius_grain = wx.StaticText(self, wx.ID_ANY, u"Radius:", wx.DefaultPosition,
+        self.label_radius_grain = wx.StaticText(self, wx.ID_ANY, u"半径:", wx.DefaultPosition,
                                                 wx.DefaultSize, 0)
         self.label_radius_grain.SetFont(wx.Font(wx.FontInfo(self.font_size)))
         self.label_radius_grain.Wrap(-1)
@@ -44,7 +44,7 @@ class Frame(wx.Frame):
         self.input_radius_grains = wx.TextCtrl(self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0)
         self.input_radius_grains.SetValue("0")
 
-        self.radius_cells_button = wx.Button(self, wx.ID_ANY, u"Randomize with radius", wx.DefaultPosition,
+        self.radius_cells_button = wx.Button(self, wx.ID_ANY, u"随机半径", wx.DefaultPosition,
                                              wx.DefaultSize, 0)
         self.radius_cells_button .Bind(wx.EVT_BUTTON, self.on_radius_cells)
 
@@ -57,13 +57,13 @@ class Frame(wx.Frame):
         sizer_hor_bound = wx.BoxSizer(wx.HORIZONTAL)
 
         # --- Label neigh choice ----
-        self.label_bound_choice = wx.StaticText(self, wx.ID_ANY, u"Choose neighbourhood:", wx.DefaultPosition,
+        self.label_bound_choice = wx.StaticText(self, wx.ID_ANY, u"选择邻居：", wx.DefaultPosition,
                                                 wx.DefaultSize, 0)
         self.label_bound_choice.SetFont(wx.Font(wx.FontInfo(self.font_size)))
         self.label_bound_choice.Wrap(-1)
         # --- Neighboor combo box ---
         self.bound_choices_array = ['Periodical', 'Non periodical']
-        self.bound_combo = wx.ComboBox(self, wx.ID_ANY, "Non periodical", choices=self.bound_choices_array)
+        self.bound_combo = wx.ComboBox(self, wx.ID_ANY, "默认Non periodical", choices=self.bound_choices_array)
         self.bound_combo.Bind(wx.EVT_COMBOBOX, self.change_bound)
 
         sizer_hor_bound.Add(self.label_bound_choice, 0, wx.ALL, 5)
@@ -76,13 +76,13 @@ class Frame(wx.Frame):
         sizer_hor_cells_control_buttons = wx.BoxSizer(wx.HORIZONTAL)
 
         # --- Start button ---
-        self.random_cells_button = wx.Button(self, wx.ID_ANY, u"Completely Random", wx.DefaultPosition,
+        self.random_cells_button = wx.Button(self, wx.ID_ANY, u"完全随机", wx.DefaultPosition,
                                              wx.DefaultSize, 0)
         self.random_cells_button.Bind(wx.EVT_BUTTON, self.on_random_cells)
         sizer_hor_cells_control_buttons.Add(self.random_cells_button, 5, wx.EXPAND, 5)
 
         # --- Pause button ---
-        self.evenly_cells_button = wx.Button(self, wx.ID_ANY, u"Evenly", wx.DefaultPosition,
+        self.evenly_cells_button = wx.Button(self, wx.ID_ANY, u"均匀分布", wx.DefaultPosition,
                                              wx.DefaultSize, 0)
         self.evenly_cells_button.Bind(wx.EVT_BUTTON, self.on_evenly_cells)
         sizer_hor_cells_control_buttons.Add(self.evenly_cells_button, 5, wx.EXPAND, 5)
@@ -91,7 +91,7 @@ class Frame(wx.Frame):
 
     def init_random_cells(self):
         sizer_hor_random_grains = wx.BoxSizer(wx.HORIZONTAL)
-        self.label_grains_input = wx.StaticText(self, wx.ID_ANY, u"Number of initial grains:", wx.DefaultPosition,
+        self.label_grains_input = wx.StaticText(self, wx.ID_ANY, u"初始晶粒个数:", wx.DefaultPosition,
                                                 wx.DefaultSize, 0)
         self.label_grains_input.SetFont(wx.Font(wx.FontInfo(self.font_size)))
         self.label_grains_input.Wrap(-1)
@@ -104,14 +104,14 @@ class Frame(wx.Frame):
 
     def init_fps_input(self):
         sizer_hor_fps = wx.BoxSizer(wx.HORIZONTAL)
-        self.label_fps_input = wx.StaticText(self, wx.ID_ANY, u"Speed of growth [FPS]:", wx.DefaultPosition,
+        self.label_fps_input = wx.StaticText(self, wx.ID_ANY, u"生长速率 [FPS]:", wx.DefaultPosition,
                                              wx.DefaultSize, 0)
         self.label_fps_input.SetFont(wx.Font(wx.FontInfo(self.font_size)))
         self.label_fps_input.Wrap(-1)
         self.input_fps = wx.TextCtrl(self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0)
-        self.input_fps.SetValue("60")
+        self.input_fps.SetValue("10")
 
-        self.apply_fps_button = wx.Button(self, wx.ID_ANY, u"Apply FPS change", wx.DefaultPosition,
+        self.apply_fps_button = wx.Button(self, wx.ID_ANY, u"应用", wx.DefaultPosition,
                                           wx.DefaultSize, 0)
         self.apply_fps_button.Bind(wx.EVT_BUTTON, self.on_fps_click)
         sizer_hor_fps.Add(self.apply_fps_button, 5, wx.EXPAND, 5)
@@ -124,19 +124,19 @@ class Frame(wx.Frame):
         sizer_ver_control_buttons = wx.BoxSizer(wx.HORIZONTAL)
 
         # --- Start button ---
-        self.start_drawing_grid_button = wx.Button(self, wx.ID_ANY, u"Start", wx.DefaultPosition,
+        self.start_drawing_grid_button = wx.Button(self, wx.ID_ANY, u"开始", wx.DefaultPosition,
                                                    wx.DefaultSize, 0)
         self.start_drawing_grid_button.Bind(wx.EVT_BUTTON, self.on_start)
         sizer_ver_control_buttons.Add(self.start_drawing_grid_button, 5, wx.EXPAND, 5)
 
         # --- Pause button ---
-        self.pause_drawing_grid_button = wx.Button(self, wx.ID_ANY, u"Pause", wx.DefaultPosition,
+        self.pause_drawing_grid_button = wx.Button(self, wx.ID_ANY, u"暂停", wx.DefaultPosition,
                                                    wx.DefaultSize, 0)
         self.pause_drawing_grid_button.Bind(wx.EVT_BUTTON, self.on_pause)
         sizer_ver_control_buttons.Add(self.pause_drawing_grid_button, 5, wx.EXPAND, 5)
 
         # --- Clean button ---
-        self.clean_grid_button = wx.Button(self, wx.ID_ANY, u"Clean", wx.DefaultPosition,
+        self.clean_grid_button = wx.Button(self, wx.ID_ANY, u"清除", wx.DefaultPosition,
                                            wx.DefaultSize, 0)
         self.clean_grid_button.Bind(wx.EVT_BUTTON, self.on_clean)
         sizer_ver_control_buttons.Add(self.clean_grid_button, 5, wx.EXPAND, 5)
@@ -147,7 +147,7 @@ class Frame(wx.Frame):
         sizer_hor_neigh = wx.BoxSizer(wx.HORIZONTAL)
 
         # --- Label neigh choice ----
-        self.label_neigh_choice = wx.StaticText(self, wx.ID_ANY, u"Choose neighbourhood:", wx.DefaultPosition,
+        self.label_neigh_choice = wx.StaticText(self, wx.ID_ANY, u"选择CA类型： ", wx.DefaultPosition,
                                                 wx.DefaultSize, 0)
         self.label_neigh_choice.SetFont(wx.Font(wx.FontInfo(self.font_size)))
         self.label_neigh_choice.Wrap(-1)
@@ -172,7 +172,7 @@ class Frame(wx.Frame):
         # --- Label grid size ---
         sizer_ver_grid_size_labels = wx.BoxSizer(wx.VERTICAL)
 
-        self.label_grid_size = wx.StaticText(self, wx.ID_ANY, u"Grid size:", wx.DefaultPosition, wx.DefaultSize, 0)
+        self.label_grid_size = wx.StaticText(self, wx.ID_ANY, u"元胞尺寸:", wx.DefaultPosition, wx.DefaultSize, 0)
         self.label_grid_size.SetFont(wx.Font(wx.FontInfo(self.font_size)))
         self.label_grid_size.Wrap(-1)
 
@@ -183,7 +183,7 @@ class Frame(wx.Frame):
         # --- Input grid size X ---
         sizer_ver_grid_size_input_x = wx.BoxSizer(wx.VERTICAL)
 
-        self.label_grid_size_x = wx.StaticText(self, wx.ID_ANY, u"Width:")
+        self.label_grid_size_x = wx.StaticText(self, wx.ID_ANY, u"高度:")
         self.label_grid_size_x.Wrap(-1)
         self.label_grid_size_x.SetFont(wx.Font(wx.FontInfo(self.font_size)))
         self.input_grid_size_x = wx.TextCtrl(self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0)
@@ -196,7 +196,7 @@ class Frame(wx.Frame):
         # --- Input grid size Y ---
         sizer_ver_grid_size_input_y = wx.BoxSizer(wx.VERTICAL)
 
-        self.label_grid_size_y = wx.StaticText(self, wx.ID_ANY, u"Height:")
+        self.label_grid_size_y = wx.StaticText(self, wx.ID_ANY, u"宽度:")
         self.label_grid_size_y.Wrap(-1)
         self.label_grid_size_y.SetFont(wx.Font(wx.FontInfo(self.font_size)))
         self.input_grid_size_y = wx.TextCtrl(self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0)
@@ -210,14 +210,14 @@ class Frame(wx.Frame):
 
     def init_create_grid_button(self):
         # --- Start drawing button ---
-        self.create_drawing_grid_button = wx.Button(self, wx.ID_ANY, u"Create drawing grid", wx.DefaultPosition,
+        self.create_drawing_grid_button = wx.Button(self, wx.ID_ANY, u"初始化网格", wx.DefaultPosition,
                                                     wx.DefaultSize, 0)
         self.create_drawing_grid_button.Bind(wx.EVT_BUTTON, self.create_grid)
 
         self.sizer_ver_input.Add(self.create_drawing_grid_button, 0, wx.EXPAND, 5)
 
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title="Grain Growth", pos=wx.DefaultPosition,
+        wx.Frame.__init__(self, parent, id=wx.ID_ANY, title="CA program", pos=wx.DefaultPosition,
                           size=wx.Size(370, 600), style=wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
         self.is_thread_alive = False
         self.init_ui()

@@ -227,18 +227,24 @@ class PyGameWindow:
 
     def von_neumann_growth(self, old_grid, row, column):
         neighbours = []
-
+        # >1 则不存在取向生长
+        possible = 1.1
         if column + 1 < self.gridClass.GRID_SIZE_Y:
-            neighbours.append(old_grid[row][column + 1])
+            if(possible>random.randint(0,1)):
+                neighbours.append(old_grid[row][column + 1])
 
         if row - 1 >= 0:
-            neighbours.append(old_grid[row - 1][column])
+            if(possible>random.randint(0,1)):
+                neighbours.append(old_grid[row - 1][column])
 
+            
         if column - 1 >= 0:
-            neighbours.append(old_grid[row][column - 1])
+            if(possible>random.randint(0,1)):
+                neighbours.append(old_grid[row][column - 1])
 
         if row + 1 < self.gridClass.GRID_SIZE_X:
-            neighbours.append(old_grid[row + 1][column])
+            if(possible>random.randint(0,1)):
+                neighbours.append(old_grid[row + 1][column])
 
         if self.gridClass.bound_choice == 'Periodical':
             if column + 1 == self.gridClass.GRID_SIZE_Y:

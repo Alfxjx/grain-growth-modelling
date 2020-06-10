@@ -16,6 +16,7 @@ class Frame(wx.Frame):
         self.init_grid_size()
         self.init_neigh_combo_box()
         self.init_create_grid_button()
+        self.init_double_grid()
         self.init_bound_combo_box()
         self.init_fps_input()
         self.init_random_cells()
@@ -23,6 +24,8 @@ class Frame(wx.Frame):
         self.init_cells_control_buttons()
 
         self.init_control_buttons()
+
+        self.init_rand_pts()
 
         # --- Set main sizers ---
         self.sizer_ver_main.Add(self.sizer_ver_input, 0, wx.EXPAND, 5)
@@ -32,7 +35,19 @@ class Frame(wx.Frame):
         # and a status bar
         self.statusBar = self.CreateStatusBar()
         self.statusBar.SetStatusText("CA 元胞自动机模拟晶粒生长")
-
+    def init_double_grid(self):
+        double_grid = wx.BoxSizer(wx.HORIZONTAL)
+        self.double_grid_btn = wx.Button(self,wx.ID_ANY,u"双层焊缝",wx.DefaultPosition,wx.DefaultSize,0)
+        self.double_grid_btn.Bind(wx.EVT_BUTTON,self.create_grid_double)
+        double_grid.Add(self.double_grid_btn,5,wx.EXPAND,5)
+        self.sizer_ver_input.Add(double_grid, 0, wx.EXPAND, 5)
+    def init_rand_pts(self):
+        sizer_ver_rand_pts = wx.BoxSizer(wx.HORIZONTAL)
+        self.start_rand_btn = wx.Button(self,wx.ID_ANY,u"形核",wx.DefaultPosition,wx.DefaultSize,0)
+        self.start_rand_btn.Bind(wx.EVT_BUTTON,self.on_random_cells)
+        sizer_ver_rand_pts.Add(self.start_rand_btn,5,wx.EXPAND,5)
+        self.sizer_ver_input.Add(sizer_ver_rand_pts, 0, wx.EXPAND, 5)
+    
     def init_radius_random_input(self):
         sizer_hor_radius_grains = wx.BoxSizer(wx.HORIZONTAL)
         # --- Label radius grain ---
@@ -187,7 +202,7 @@ class Frame(wx.Frame):
         self.label_grid_size_x.Wrap(-1)
         self.label_grid_size_x.SetFont(wx.Font(wx.FontInfo(self.font_size)))
         self.input_grid_size_x = wx.TextCtrl(self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0)
-        self.input_grid_size_x.SetValue("100")
+        self.input_grid_size_x.SetValue("60")
 
         sizer_ver_grid_size_input_x.Add(self.label_grid_size_x, 0, wx.ALL, 5)
         sizer_ver_grid_size_input_x.Add(self.input_grid_size_x, 0, wx.ALL, 5)
@@ -200,7 +215,7 @@ class Frame(wx.Frame):
         self.label_grid_size_y.Wrap(-1)
         self.label_grid_size_y.SetFont(wx.Font(wx.FontInfo(self.font_size)))
         self.input_grid_size_y = wx.TextCtrl(self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0)
-        self.input_grid_size_y.SetValue("100")
+        self.input_grid_size_y.SetValue("60")
 
         sizer_ver_grid_size_input_y.Add(self.label_grid_size_y, 0, wx.ALL, 5)
         sizer_ver_grid_size_input_y.Add(self.input_grid_size_y, 0, wx.ALL, 5)
@@ -234,7 +249,7 @@ class Frame(wx.Frame):
                 return
         self.drawing_thread.set_fps(fps)
 
-
+  
     def on_random_cells(self, event):
         grain_number = int(self.input_grains.GetValue())
         self.drawing_thread.grid.randomize_cells(grain_number)
@@ -282,6 +297,22 @@ class Frame(wx.Frame):
         self.drawing_thread.set_coords(x_coordinate, y_coordinate)
         self.drawing_thread.start()
 
+    def create_grid_double(self, event):
+        x_coordinate = int(self.input_grid_size_x.GetValue())
+        db_x = x_coordinate*2
+        y_coordinate = int(self.input_grid_size_y.GetValue())
+        if x_coordinate <= 0 or y_coordinate <= 0:
+            self.error_dialog = wx.MessageDialog(self, 'Size cannot be negative.', 'Error creating grid!',
+                                                 wx.ICON_ERROR)
+            val = self.error_dialog.ShowModal()
+            self.error_dialog.Show()
+            if val == wx.ID_CANCEL:
+                self.error_dialog.Destroy()
+                return
+        self.drawing_thread = DrawingThread()
+        self.drawing_thread.set_coords(db_x, y_coordinate)
+        self.drawing_thread.start()
+
     def OnExit(self, event):
         """Close the frame, terminating the application."""
         self.drawing_thread.join()
@@ -292,8 +323,8 @@ class DrawingThread(threading.Thread):
 
     def __init__(self):
         super(DrawingThread, self).__init__()
-        self.x = 100
-        self.y = 100
+        self.x = 60
+        self.y = 60
         self.grid = GridClass()
 
     def run(self):

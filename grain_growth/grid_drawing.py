@@ -32,7 +32,7 @@ class GridClass:
         # Create a 2 dimensional array. A two dimensional
         # array is simply a list of lists.
         self.grid = []
-        for row in range(self.GRID_SIZE_X):
+        for row in range(2*self.GRID_SIZE_X):
             # Add an empty array that will hold each cell
             # in this row
             self.grid.append([])
@@ -55,7 +55,8 @@ class GridClass:
 
     def set_grain_growth(self, grain_growth_bool):
         self.grain_growth = grain_growth_bool
-
+        
+    # TODO 不在已有位置上新生成 point
     def randomize_cells(self, value):
         color_dict = RandomColorDictionary()
         if value > self.GRID_SIZE_X * self.GRID_SIZE_Y:
@@ -152,6 +153,7 @@ class PyGameWindow:
 
         # Loop until the user clicks the close button.
         self.done = False
+        self.half_OK = False 
         self.color_class = RandomColorDictionary()
         self.gridClass = grid
 
@@ -514,11 +516,13 @@ class PyGameWindow:
                     self.gridClass.grid[row][column] = random.choice(list(self.color_class.colors))
                     # TEST Methods of click in here
                     print("Click ", pos, "Grid coordinates: ", row, column)
-
+            # HALF_OK = False
+            OKLIST = []
             # Check grid for neighbours
             if self.gridClass.grain_growth:
                 old_grid = deepcopy(self.gridClass.grid)
-                for row in range(self.gridClass.GRID_SIZE_X):
+                # 下半部分
+                for row in range(self.gridClass.GRID_SIZE_X//2,self.gridClass.GRID_SIZE_X):
                     for column in range(self.gridClass.GRID_SIZE_Y):
                         # MOORE test
                         if old_grid[row][column] == 0:
@@ -534,11 +538,22 @@ class PyGameWindow:
                                 self.hexagonal_random_growth(old_grid, row, column)
                             elif self.gridClass.neighbourhood_type == 'Random Pentagonal':
                                 self.pentagonal_random_growth(old_grid, row, column)
-
+                # print(old_grid)
+                for row in range(self.gridClass.GRID_SIZE_X//2,self.gridClass.GRID_SIZE_X):
+                    for column in range(self.gridClass.GRID_SIZE_Y):
+                        # MOORE test
+                        if self.gridClass.grid[row][column] == 0:
+                            OKLIST.append(0)
+                # print(OKLIST)            
+                if(len(OKLIST)==0):
+                    self.half_OK = True  
+                else:
+                    self.half_OK = False                                      
             # Set the screen background
-            self.screen.fill(self.color_class.colors['black'])
+            #self.screen.fill(self.color_class.colors['black'])
 
             # Draw the grid
+            # print('下半 drawing')   
             for row in range(self.gridClass.GRID_SIZE_X):
                 for column in range(self.gridClass.GRID_SIZE_Y):
                     color = self.color_class.colors['white']
@@ -550,6 +565,40 @@ class PyGameWindow:
                                       (self.gridClass.MARGIN + self.gridClass.HEIGHT) * row + self.gridClass.MARGIN,
                                       self.gridClass.WIDTH,
                                       self.gridClass.HEIGHT])
+            if self.gridClass.grain_growth: 
+                # print('上半')   
+                if self.half_OK==True:
+                    print('上半-True')   
+                    for row in range(self.gridClass.GRID_SIZE_X//2):
+                        for column in range(self.gridClass.GRID_SIZE_Y):
+                            # MOORE test
+                            if old_grid[row][column] == 0:
+                                if self.gridClass.neighbourhood_type == 'Moore':
+                                    self.moore_growth(old_grid, row, column)
+                                elif self.gridClass.neighbourhood_type == 'Von Neumann':
+                                    self.von_neumann_growth(old_grid, row, column)
+                                elif self.gridClass.neighbourhood_type == 'Hexagonal Right':
+                                    self.hexagonal_right_growth(old_grid, row, column)
+                                elif self.gridClass.neighbourhood_type == 'Hexagonal Left':
+                                    self.hexagonal_left_growth(old_grid, row, column)
+                                elif self.gridClass.neighbourhood_type == 'Random Hexagonal':
+                                    self.hexagonal_random_growth(old_grid, row, column)
+                                elif self.gridClass.neighbourhood_type == 'Random Pentagonal':
+                                    self.pentagonal_random_growth(old_grid, row, column)             
+            # Draw the grid
+            # print('上半-drawing') 
+            for row in range(self.gridClass.GRID_SIZE_X):
+                for column in range(self.gridClass.GRID_SIZE_Y):
+                    color = self.color_class.colors['white']
+                    if self.gridClass.grid[row][column] != 0:
+                        color = self.color_class.colors[self.gridClass.grid[row][column]]
+                    pygame.draw.rect(self.screen,
+                                     color,
+                                     [(self.gridClass.MARGIN + self.gridClass.WIDTH) * column + self.gridClass.MARGIN,
+                                      (self.gridClass.MARGIN + self.gridClass.HEIGHT) * row + self.gridClass.MARGIN,
+                                      self.gridClass.WIDTH,
+                                      self.gridClass.HEIGHT])
+            
             # Limit to 60 frames per second
             self.clock.tick(self.gridClass.GROWTH_SPEED)
 

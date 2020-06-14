@@ -227,7 +227,7 @@ class PyGameWindow:
         color_to_paint = self.determine_color(neighbours)
         self.gridClass.grid[row][column] = color_to_paint
 
-    def von_neumann_growth(self, old_grid, row, column):
+    def old_von_neumann_growth(self, old_grid, row, column):
         neighbours = []
 
         if column + 1 < self.gridClass.GRID_SIZE_Y:
@@ -258,12 +258,49 @@ class PyGameWindow:
         color_to_paint = self.determine_color(neighbours)
         self.gridClass.grid[row][column] = color_to_paint
 
+    def von_neumann_growth(self, old_grid, row, column):
+        neighbours = []
+        # >1 则不存在取向生长
+        possible = 0.7
+        if column + 1 < self.gridClass.GRID_SIZE_Y:
+            if(possible>random.randint(0,1)):
+                neighbours.append(old_grid[row][column + 1])
+
+        if row - 1 >= 0:
+            if(possible>random.randint(0,1)):
+                neighbours.append(old_grid[row - 1][column])
+
+            
+        if column - 1 >= 0:
+            if(possible>random.randint(0,1)):
+                neighbours.append(old_grid[row][column - 1])
+
+        if row + 1 < self.gridClass.GRID_SIZE_X:
+            if(possible>random.randint(0,1)):
+                neighbours.append(old_grid[row + 1][column])
+
+        if self.gridClass.bound_choice == 'Periodical':
+            if column + 1 == self.gridClass.GRID_SIZE_Y:
+                neighbours.append(old_grid[row][0])
+
+            if row - 1 == -1:
+                neighbours.append(old_grid[self.gridClass.GRID_SIZE_X - 1][column])
+
+            if column - 1 == -1:
+                neighbours.append(old_grid[row][self.gridClass.GRID_SIZE_Y - 1])
+
+            if row + 1 == self.gridClass.GRID_SIZE_X:
+                neighbours.append(old_grid[0][column])
+
+        color_to_paint = self.determine_color(neighbours)
+        self.gridClass.grid[row][column] = color_to_paint
+
     # 计算打底层的变化
     def v_n_growth(self, old_grid,row, column):
         neighbours = []
         grow_poss = 0.6
         if(grow_poss>random.randint(0,1)):
-            self.von_neumann_growth(old_grid,row, column)
+            self.old_von_neumann_growth(old_grid,row, column)
 
 
     def hexagonal_right_growth(self, old_grid, row, column):

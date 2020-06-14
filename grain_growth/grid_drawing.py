@@ -258,6 +258,14 @@ class PyGameWindow:
         color_to_paint = self.determine_color(neighbours)
         self.gridClass.grid[row][column] = color_to_paint
 
+    # 计算打底层的变化
+    def v_n_growth(self, old_grid,row, column):
+        neighbours = []
+        grow_poss = 0.6
+        if(grow_poss>random.randint(0,1)):
+            self.von_neumann_growth(old_grid,row, column)
+
+
     def hexagonal_right_growth(self, old_grid, row, column):
         neighbours = []
 
@@ -584,7 +592,13 @@ class PyGameWindow:
                                 elif self.gridClass.neighbourhood_type == 'Random Hexagonal':
                                     self.hexagonal_random_growth(old_grid, row, column)
                                 elif self.gridClass.neighbourhood_type == 'Random Pentagonal':
-                                    self.pentagonal_random_growth(old_grid, row, column)             
+                                    self.pentagonal_random_growth(old_grid, row, column) 
+                    # 下半部分
+                    for row in range(self.gridClass.GRID_SIZE_X//2,self.gridClass.GRID_SIZE_X):
+                        for column in range(self.gridClass.GRID_SIZE_Y):
+                            if old_grid[row][column] != 0:
+                                 if self.gridClass.neighbourhood_type == 'Von Neumann':
+                                     self.v_n_growth(old_grid,row,column)                     
             # Draw the grid
             # print('上半-drawing') 
             for row in range(self.gridClass.GRID_SIZE_X):

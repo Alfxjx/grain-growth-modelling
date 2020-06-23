@@ -64,8 +64,19 @@ class GridClass:
             random_row = random.randint(0, self.GRID_SIZE_X - 1)
             random_column = random.randint(0, self.GRID_SIZE_Y - 1)
             random_color = random.choice(list(color_dict.colors.keys()))
-            self.grid[random_row][random_column] = random_color
-
+            if(self.grid[random_row][random_column]==0):
+                self.grid[random_row][random_column] = random_color
+    # 设置底部柱状晶的形核        
+    def bot_init_rand(self,value):
+        color_dict = RandomColorDictionary()
+        # 太多就设置为最大值
+        if value > self.GRID_SIZE_Y:
+            value = self.GRID_SIZE_Y
+        for i in range(value+1):
+            row_bot = self.GRID_SIZE_X-1
+            column_bot = random.randint(0,self.GRID_SIZE_Y-1)
+            rand_color = random.choice(list(color_dict.colors.keys()))
+            self.grid[row_bot][column_bot] = rand_color
     def randomize_radius_cells(self, radius, cell_amount):
 
         if cell_amount <= 0 or (radius > self.GRID_SIZE_X or radius > self.GRID_SIZE_Y):

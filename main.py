@@ -21,6 +21,7 @@ class Frame(wx.Frame):
         self.init_random_cells()
         self.init_radius_random_input()
         self.init_cells_control_buttons()
+        self.init_bottom_cells()
 
         self.init_control_buttons()
 
@@ -88,7 +89,10 @@ class Frame(wx.Frame):
         sizer_hor_cells_control_buttons.Add(self.evenly_cells_button, 5, wx.EXPAND, 5)
 
         self.sizer_ver_input.Add(sizer_hor_cells_control_buttons, 0, wx.EXPAND, 5)
-
+    def init_bottom_cells(self):
+        self.create_bottom_init_btn = wx.Button(self, wx.ID_ANY, u"柱状初始化", wx.DefaultPosition,wx.DefaultSize, 0)
+        self.create_bottom_init_btn.Bind(wx.EVT_BUTTON, self.on_bot_init)
+        self.sizer_ver_input.Add(self.create_bottom_init_btn, 0, wx.EXPAND, 5)
     def init_random_cells(self):
         sizer_hor_random_grains = wx.BoxSizer(wx.HORIZONTAL)
         self.label_grains_input = wx.StaticText(self, wx.ID_ANY, u"初始晶粒个数:", wx.DefaultPosition,
@@ -264,8 +268,10 @@ class Frame(wx.Frame):
         radius = int(self.input_radius_grains.GetValue())
         grains = int(self.input_grains.GetValue())
         self.drawing_thread.grid.randomize_radius_cells(radius, grains)
-
-
+    def on_bot_init(self,event):
+        # grain_number = int(self.input_grains.GetValue())
+        grain_number = 25
+        self.drawing_thread.grid.bot_init_rand(grain_number)
 
     def create_grid(self, event):
         x_coordinate = int(self.input_grid_size_x.GetValue())
